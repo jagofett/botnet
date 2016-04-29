@@ -110,6 +110,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiModels\AttendeeViewModel.cs" />
+    <Compile Include="ApiModels\EmployeeViewModel.cs" />
+    <Compile Include="ApiModels\MeetingRoomViewModel.cs" />
+    <Compile Include="ApiModels\MeetingViewModel.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Global.asax.cs">

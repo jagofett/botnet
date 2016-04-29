@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using KerioBot.ApiModels;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.Utilities;
 using Newtonsoft.Json;
@@ -17,6 +20,29 @@ namespace KerioBot
     [BotAuthentication]
     public class MessagesController : ApiController
     {
+        private readonly string KerioAPIUri = "http://mrdtest.int.i-deal.hu/";
+
+        private List<MeetingRoomViewModel> meetingRooms = new List<MeetingRoomViewModel>(); 
+
+        private async void GetMeetingRooms()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(KerioAPIUri);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // New code:
+                HttpResponseMessage response = await client.GetAsync("api/meetingRooms");
+                if (response.IsSuccessStatusCode)
+                {
+                    meetingRooms =
+                        await response.Content.ReadAsAsync<IEnumerable<MeetingRoomViewModel>>() as
+                            List<MeetingRoomViewModel>;
+                }
+            }
+        }
+
         internal static IDialog<KerioForm> MakeRoot()
         {
             return Chain.From(() => FormDialog.FromForm(KerioForm.BuildForm))
@@ -53,6 +79,7 @@ namespace KerioBot
                     return message.CreateReplyMessage("CUCCCC!!");
                 }
 
+                GetMeetingRooms();
                 return await Conversation.SendAsync(message, MakeRoot);
             }
             else
