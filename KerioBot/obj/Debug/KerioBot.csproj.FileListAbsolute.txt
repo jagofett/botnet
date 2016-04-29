@@ -22,3 +22,27 @@ C:\Users\d.papp\Documents\Visual Studio 2015\Projects\KerioBot\KerioBot\bin\Syst
 C:\Users\d.papp\Documents\Visual Studio 2015\Projects\KerioBot\KerioBot\obj\Debug\KerioBot.csprojResolveAssemblyReference.cache
 C:\Users\d.papp\Documents\Visual Studio 2015\Projects\KerioBot\KerioBot\obj\Debug\KerioBot.dll
 C:\Users\d.papp\Documents\Visual Studio 2015\Projects\KerioBot\KerioBot\obj\Debug\KerioBot.pdb
+d:\projektek\KerioBot\botnet\KerioBot\bin\KerioBot.dll.config
+d:\projektek\KerioBot\botnet\KerioBot\bin\KerioBot.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\KerioBot.pdb
+d:\projektek\KerioBot\botnet\KerioBot\bin\Autofac.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.Bot.Builder.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.Bot.Connector.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.Bot.Connector.Utilities.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.Rest.ClientRuntime.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.WindowsAzure.Configuration.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Newtonsoft.Json.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\System.Net.Http.Formatting.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\System.Web.Http.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\System.Web.Http.WebHost.dll
+d:\projektek\KerioBot\botnet\KerioBot\bin\Autofac.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.Bot.Builder.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.Rest.ClientRuntime.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\Microsoft.WindowsAzure.Configuration.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\Newtonsoft.Json.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\System.Net.Http.Formatting.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\System.Web.Http.xml
+d:\projektek\KerioBot\botnet\KerioBot\bin\System.Web.Http.WebHost.xml
+d:\projektek\KerioBot\botnet\KerioBot\obj\Debug\KerioBot.csprojResolveAssemblyReference.cache
+d:\projektek\KerioBot\botnet\KerioBot\obj\Debug\KerioBot.dll
+d:\projektek\KerioBot\botnet\KerioBot\obj\Debug\KerioBot.pdb
