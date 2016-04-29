@@ -1,4 +1,10 @@
-﻿namespace KerioBot.Models
+﻿using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using KerioBot.ApiModels;
+using Newtonsoft.Json;
+
+namespace KerioBot.Models
 {
     using Microsoft.Bot.Builder.Dialogs;
     using Microsoft.Bot.Builder.FormFlow;
@@ -33,22 +39,83 @@
             }
         }
 
-        [Prompt("Idő?")]
+        [Prompt("Mikorra szeretnél foglalni?")]
         [Terms("óra", "idő")]
         public string Time;
 
-        [Prompt("Kiknek? {||}")]
+        [Prompt("Kik vesznek részt?")]
         public string Participants;
 
-        [Prompt("Hova? {||}")]
+        [Prompt("Hova foglaljak?")]
         public string Location;
+
+
+        private static  MeetingRoomViewModel meeting;
+        //private static List<MeetingRoomViewModel> avMeetings = new List<MeetingRoomViewModel>();
+
+        private static readonly string KerioAPIUri = "http://mrdapi.azurewebsites.net/";
+
+        private static IEnumerable<MeetingRoomViewModel> meetingRooms = new List<MeetingRoomViewModel>();
+        private static void GetMeetingRooms()
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(KerioAPIUri);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // New code:
+                var response = client.GetAsync("api/meetingRooms").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var str = response.Content.ReadAsStringAsync().Result;
+                    meetingRooms = JsonConvert.DeserializeObject<IEnumerable<MeetingRoomViewModel>>(str);
+                     
+                }
+            }
+        }
+
+        private static  string ReserveMeeting(DateTime meetingTime)
+        {
+            var model = new MeetingViewModel
+            {
+                Name = "Teszt meeting",
+                StartDate = meetingTime.ToString(),
+                EndDate =  meetingTime.AddMinutes(30).ToString(),
+                Organizer = new AttendeeViewModel
+                {
+                    Name = "Magasvári Ákos",
+                    Email = "a.magasvari@mortoff.hu"
+                },
+                Summary = "Teszt esemeny"
+            };
+            var res = string.Empty;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(KerioAPIUri);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // New code:
+                var postStr = JsonConvert.SerializeObject(model);
+                var response = client.PostAsJsonAsync("api/meetings?roomAddress="+meeting.Id, model).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    res = response.Content.ReadAsStringAsync().Result;
+                    //res = JsonConvert.DeserializeObject<IEnumerable<MeetingRoomViewModel>>(str);
+
+                }
+            }
+            return res;
+        }
 
         public static IForm<KerioForm> BuildForm()
         {
             OnCompletionAsyncDelegate<KerioForm> processForm = async (context, state) =>
             {
                 var xy = context;
-                await context.PostAsync("Processing your request");
+                var resp = ReserveMeeting(state.meetingTime);
+                await context.PostAsync("Processing your request response: " + resp);
             };
 
             FormBuilder<KerioForm> form = new FormBuilder<KerioForm>();
@@ -166,10 +233,36 @@
                     return result;
                 })
                 .Field(nameof(KerioForm.Participants))
-                .Field(nameof(KerioForm.Location))
+                .Field(nameof(KerioForm.Location), validate: async(state, value) =>
+                {
+                    var res = new ValidateResult();
+                    var meeting = meetingRooms.FirstOrDefault(x => x.Name.ToLower().Contains(((string) value).ToLower()));
+                    if (meeting == null)
+                    {
+                        res.Feedback = "Nincs ilyen tárgyaló! :=(";
+                        res.IsValid = false;
+                        return res;
+                    }
+
+                    KerioForm.meeting = meeting;
+
+                    res.Feedback = meeting.Name + " kiválasztva.";
+                    res.IsValid = true;
+                    return res;
+                },prompt: GenerateAvLoc())
                 .AddRemainingFields()
                 .OnCompletionAsync(processForm)
                 .Build();
+        }
+
+        private static PromptAttribute GenerateAvLoc()
+        {
+            GetMeetingRooms();
+
+            var meetingR = string.Join(", ",meetingRooms.Select(x => x.Name));
+            var ret = new PromptAttribute("Elérhető tárgyalók: " + meetingR);
+
+            return ret;
         }
     }
 }

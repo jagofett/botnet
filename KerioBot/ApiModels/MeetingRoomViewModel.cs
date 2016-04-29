@@ -1,5 +1,8 @@
-﻿namespace KerioBot.ApiModels
+﻿using System;
+
+namespace KerioBot.ApiModels
 {
+    [Serializable]
     public class MeetingRoomViewModel
     {
         public string Id { get; set; }

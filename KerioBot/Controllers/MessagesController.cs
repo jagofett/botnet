@@ -24,7 +24,7 @@ namespace KerioBot
 
         private List<MeetingRoomViewModel> meetingRooms = new List<MeetingRoomViewModel>(); 
 
-        private async void GetMeetingRooms()
+        private async Task GetMeetingRooms()
         {
             using (var client = new HttpClient())
             {
@@ -33,7 +33,7 @@ namespace KerioBot
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 // New code:
-                HttpResponseMessage response = await client.GetAsync("api/meetingRooms");
+                var response = await client.GetAsync("api/meetingRooms");
                 if (response.IsSuccessStatusCode)
                 {
                     meetingRooms =
@@ -79,7 +79,19 @@ namespace KerioBot
                     return message.CreateReplyMessage("CUCCCC!!");
                 }
 
-                GetMeetingRooms();
+                if (message.Text.ToLower() == "hodor")
+                {
+                    return message.CreateReplyMessage("HODOOOR!!");
+                }
+
+                if (message.Text.ToLower() == "morton")
+                {
+                    return message.CreateReplyMessage("Üdv a MortON napon!");
+                }
+
+
+                //await GetMeetingRooms();
+
                 return await Conversation.SendAsync(message, MakeRoot);
             }
             else
